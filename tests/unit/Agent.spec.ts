@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import Agent from '@/components/Agent.vue'
 
 describe('Agent.vue', () => {
-  const agents = [{ agent_id: '123', full_name: 'Inigo Montoya' }]
+  const agents = [{ id: '123', full_name: 'Inigo Montoya' }]
 
   function getMountedComponent() {
     return shallowMount(Agent, {

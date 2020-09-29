@@ -8,8 +8,8 @@
     </option>
     <option
       v-for="item in agents"
-      :key="item.agent_id"
-      :value="item.agent_id"
+      :key="item.id"
+      :value="item.id"
     >
       {{ item.full_name }}
     </option>

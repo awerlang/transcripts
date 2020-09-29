@@ -4,7 +4,7 @@ import { enableFetchMocks } from 'jest-fetch-mock'
 import Cockpit from '@/components/Cockpit.vue'
 
 describe('Cockpit.vue', () => {
-  const agents = [{ agent_id: '123', full_name: 'Inigo Montoya' }]
+  const agents = [{ id: '123', full_name: 'Inigo Montoya' }]
 
   beforeAll(() => enableFetchMocks())
 

@@ -1,0 +1,3 @@
+{
+    "/calls/:id/transcript": "/transcripts?call_id=:id"
+}

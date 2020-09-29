@@ -12,7 +12,7 @@ import { defineComponent } from 'vue';
 import Agent from './Agent.vue';
 
 type AgentData = {
-  agent_id: string;
+  id: string;
   full_name: string;
   email: string;
 }
