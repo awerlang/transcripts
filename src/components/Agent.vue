@@ -1,7 +1,15 @@
 <template>
   <select v-model="selected">
-    <option disabled>Agent</option>
-    <option v-for="item in agents" :key="item.agent_id" :value="item.agent_id">{{item.full_name}}</option>
+    <option disabled>
+      Agent
+    </option>
+    <option
+      v-for="item in agents"
+      :key="item.agent_id"
+      :value="item.agent_id"
+    >
+      {{ item.full_name }}
+    </option>
   </select>
 </template>
 
@@ -11,7 +19,10 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'Agent',
   props: {
-    agents: Array,
+    agents: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {

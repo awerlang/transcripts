@@ -1,8 +1,10 @@
 <template>
-    <div class="top-bar">Transcript Analyzer</div>
-    <div class="filter-bar">
-        <Agent :agents="agents" />
-    </div>
+  <div class="top-bar">
+    Transcript Analyzer
+  </div>
+  <div class="filter-bar">
+    <Agent :agents="agents" />
+  </div>
 </template>
 
 <script lang="ts">
