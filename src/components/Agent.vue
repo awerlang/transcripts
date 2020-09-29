@@ -1,6 +1,9 @@
 <template>
   <select v-model="selected">
-    <option disabled>
+    <option
+      disabled
+      value="null"
+    >
       Agent
     </option>
     <option
