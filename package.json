@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "preserve": "json-server ./data/db.json &",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit --watch",
@@ -35,6 +36,8 @@
     "@vue/test-utils": "^2.0.0-0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0-0",
+    "jest-fetch-mock": "^3.0.3",
+    "json-server": "^0.16.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
