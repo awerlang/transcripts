@@ -11,6 +11,12 @@
 import { defineComponent } from 'vue';
 import Agent from './Agent.vue';
 
+type AgentData = {
+  agent_id: string;
+  full_name: string;
+  email: string;
+}
+
 export default defineComponent({
   name: 'Cockpit',
   components: {
@@ -18,8 +24,13 @@ export default defineComponent({
   },
   data() {
       return {
-          agents: [],
+          agents: [] as AgentData[],
       }
+  },
+  created() {
+    fetch('/agents')
+      .then(response => response.json())
+      .then(data => this.agents = data)
   }
 });
 </script>
