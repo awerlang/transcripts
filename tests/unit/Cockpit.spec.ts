@@ -38,11 +38,19 @@ describe('Cockpit.vue', () => {
     expect((wrapper.vm as any).calls).toStrictEqual([])
   })
 
+  it('shows informational message', async () => {
+    const wrapper = await getMountedComponent()
+
+    const el = wrapper.find('business-people-logo-stub')
+    expect(el.exists()).toBe(true)
+  })
+
   it('when agent is selected the calls are filtered by agent', async () => {
     const wrapper = await getMountedComponent()
 
     const vm: any = wrapper.vm.$data
     vm.selected_agent_id = '123'
+    await wrapper.vm.$nextTick()
 
     expect((wrapper.vm as any).calls).toStrictEqual(calls)
   })
@@ -56,5 +64,18 @@ describe('Cockpit.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect((wrapper.vm as any).selected_call_id).toBeNull()
+  })
+
+  it('when call is selected then hides informational message', async () => {
+    const wrapper = await getMountedComponent()
+
+    const vm: any = wrapper.vm.$data
+    vm.selected_agent_id = '123'
+    await wrapper.vm.$nextTick()
+    vm.selected_call_id = 'abc'
+    await wrapper.vm.$nextTick()
+
+    const el = wrapper.find('business-people-logo-stub')
+    expect(el.exists()).toBe(false)
   })
 })

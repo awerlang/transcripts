@@ -12,9 +12,12 @@
       v-model="selected_call_id"
     />
   </div>
-  <div v-if="!selected_call_id">
-    <div><strong>Selection pending</strong></div>
-    <div>Select a call from top menu and a transcript analysis will be shown here</div>
+  <div class="container">
+    <template v-if="!selected_call_id">
+      <BusinessPeopleLogo />
+      <div><strong>Selection pending</strong></div>
+      <div>Select a call from top menu and a transcript analysis will be shown here</div>
+    </template>
   </div>
 </template>
 
@@ -23,6 +26,7 @@ import { defineComponent } from 'vue';
 import { AgentData, CallData } from '@/utils/types'
 import Agent from './Agent.vue';
 import Call from './Call.vue';
+import BusinessPeopleLogo from './BusinessPeopleLogo.vue';
 
 type Data = {
   agents: AgentData[];
@@ -36,6 +40,7 @@ export default defineComponent({
   components: {
     Agent,
     Call,
+    BusinessPeopleLogo,
   },
   data(): Data {
     return {
@@ -87,5 +92,20 @@ export default defineComponent({
     > * {
       margin-left: 8px;
     }
+}
+.container {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background-color: hsl(183, 1%, 98%);
+
+  > * {
+    margin-bottom: 12px;
+  }
 }
 </style>

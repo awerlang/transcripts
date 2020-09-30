@@ -15,6 +15,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+html, 
+body,
+#app {height: 100%; padding: 0; margin: 0; width: 100%;}
+#app {display: flex; flex-direction: column;}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
