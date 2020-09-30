@@ -1,8 +1,9 @@
 import { shallowMount } from '@vue/test-utils'
+import { AgentData } from '@/utils/types'
 import Agent from '@/components/Agent.vue'
 
 describe('Agent.vue', () => {
-  const agents = [{ id: '123', full_name: 'Inigo Montoya' }]
+  const agents: AgentData[] = [{ id: '123', full_name: 'Inigo Montoya', email: 'inigo@montoya.com' }]
 
   function getMountedComponent() {
     return shallowMount(Agent, {
@@ -19,6 +20,6 @@ describe('Agent.vue', () => {
 
   it('renders props.agents', () => {
     const wrapper = getMountedComponent()
-    expect(wrapper.get('option[value="123"]').text()).toMatch('Inigo Montoya')
+    expect(wrapper.get('option[value="123"]').text()).toBe('Inigo Montoya')
   })
 })
