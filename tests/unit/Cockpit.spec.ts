@@ -16,18 +16,34 @@ describe('Cockpit.vue', () => {
   beforeAll(() => enableFetchMocks())
 
   function getMountedComponent() {
-    return shallowMount(Cockpit, {})
+    const wrapper = shallowMount(Cockpit, {})
+    return flushPromises().then(() => wrapper)
   }
 
-  it('fetches data', async () => {
+  beforeEach(() => {
     fetchMock.doMockOnceIf('/agents').mockResponseOnce(JSON.stringify(agents))
     fetchMock.doMockOnceIf('/calls').mockResponseOnce(JSON.stringify(calls))
+  })
 
-    const wrapper = getMountedComponent()
-    await flushPromises()
+  afterEach(() => {
+    fetchMock.resetMocks()
+  })
+
+  it('fetches data', async () => {
+    const wrapper = await getMountedComponent()
 
     const vm: any = wrapper.vm.$data
     expect(vm.agents).toStrictEqual(agents)
     expect(vm.all_calls).toStrictEqual(calls)
+    expect((wrapper.vm as any).calls).toStrictEqual([])
+  })
+
+  it('when agent is selected the calls are filtered by agent', async () => {
+    const wrapper = await getMountedComponent()
+
+    const vm: any = wrapper.vm.$data
+    vm.selected_agent_id = '123'
+
+    expect((wrapper.vm as any).calls).toStrictEqual(calls)
   })
 })

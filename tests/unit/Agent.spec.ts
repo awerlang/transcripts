@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, DOMWrapper } from '@vue/test-utils'
 import { AgentData } from '@/utils/types'
 import Agent from '@/components/Agent.vue'
 
@@ -7,8 +7,13 @@ describe('Agent.vue', () => {
 
   function getMountedComponent() {
     return shallowMount(Agent, {
-      props: { agents },
+      props: { agents, modelValue: null },
     })
+  }
+
+  function setSelected(select: DOMWrapper<HTMLSelectElement>, index: number, selected: boolean = true) {
+    select.findAll('option')[index].element.selected = selected
+    return select.trigger('change')
   }
 
   it('displays Agent placeholder', () => {
@@ -21,5 +26,15 @@ describe('Agent.vue', () => {
   it('renders props.agents', () => {
     const wrapper = getMountedComponent()
     expect(wrapper.get('option[value="123"]').text()).toBe('Inigo Montoya')
+  })
+
+  it('emits on selection change', async () => {
+    const wrapper = getMountedComponent()
+    const select = wrapper.find('select')
+
+    await setSelected(select, 1)
+
+    expect(wrapper.get('select').element.value).toBe('123')
+    expect(wrapper.emitted('update:modelValue')).toStrictEqual([['123']])
   })
 })

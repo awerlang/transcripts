@@ -3,8 +3,11 @@
     Transcript Analyzer
   </div>
   <div class="filter-bar">
-    <Agent :agents="agents" />
-    <Call :calls="all_calls" />
+    <Agent
+      :agents="agents"
+      v-model="selected_agent_id"
+    />
+    <Call :calls="calls" />
   </div>
 </template>
 
@@ -17,6 +20,7 @@ import Call from './Call.vue';
 type Data = {
   agents: AgentData[];
   all_calls: CallData[];
+  selected_agent_id: string | null;
 }
 
 export default defineComponent({
@@ -27,8 +31,15 @@ export default defineComponent({
   },
   data(): Data {
     return {
-      agents: [] as AgentData[],
-      all_calls: [] as CallData[],
+      agents: [],
+      all_calls: [],
+      selected_agent_id: null,
+    }
+  },
+  computed: {
+    calls(this: Data) {
+      const agent_id = this.selected_agent_id
+      return this.all_calls.filter(it => it.agent.some(ag => ag.agent_id === agent_id))
     }
   },
   created() {
