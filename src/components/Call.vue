@@ -27,11 +27,20 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    modelValue: {
+      type: String,
+      default: null,
+    },
   },
-  data() {
-    return {
-      selected: null,
-    }
+  computed: {
+    selected: {
+      get(): string {
+        return this.modelValue
+      },
+      set(value: string) {
+        this.$emit('update:modelValue', value)
+      }
+    },
   },
   methods: {
     formatDate(date: Date) {

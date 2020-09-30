@@ -46,4 +46,15 @@ describe('Cockpit.vue', () => {
 
     expect((wrapper.vm as any).calls).toStrictEqual(calls)
   })
+
+  it('when agent is selected then the current call is unset', async () => {
+    const wrapper = await getMountedComponent()
+    const vm: any = wrapper.vm.$data
+    vm.selected_call_id = 'abc'
+
+    vm.selected_agent_id = '123'
+    await wrapper.vm.$nextTick()
+
+    expect((wrapper.vm as any).selected_call_id).toBeNull()
+  })
 })

@@ -7,7 +7,14 @@
       :agents="agents"
       v-model="selected_agent_id"
     />
-    <Call :calls="calls" />
+    <Call
+      :calls="calls"
+      v-model="selected_call_id"
+    />
+  </div>
+  <div v-if="!selected_call_id">
+    <div><strong>Selection pending</strong></div>
+    <div>Select a call from top menu and a transcript analysis will be shown here</div>
   </div>
 </template>
 
@@ -21,6 +28,7 @@ type Data = {
   agents: AgentData[];
   all_calls: CallData[];
   selected_agent_id: string | null;
+  selected_call_id: string | null;
 }
 
 export default defineComponent({
@@ -34,12 +42,18 @@ export default defineComponent({
       agents: [],
       all_calls: [],
       selected_agent_id: null,
+      selected_call_id: null,
     }
   },
   computed: {
     calls(this: Data) {
       const agent_id = this.selected_agent_id
       return this.all_calls.filter(it => it.agent.some(ag => ag.agent_id === agent_id))
+    }
+  },
+  watch: {
+    selected_agent_id() {
+      this.selected_call_id = null
     }
   },
   created() {

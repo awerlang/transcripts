@@ -1,4 +1,4 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, DOMWrapper } from '@vue/test-utils'
 import { CallData } from '@/utils/types'
 import Call from '@/components/Call.vue'
 
@@ -16,6 +16,11 @@ describe('Call.vue', () => {
     })
   }
 
+  function setSelected(select: DOMWrapper<HTMLSelectElement>, index: number, selected: boolean = true) {
+    select.findAll('option')[index].element.selected = selected
+    return select.trigger('change')
+  }
+
   it('displays Call placeholder', () => {
     const wrapper = getMountedComponent()
     const selected = wrapper.get('select').element.selectedOptions[0]
@@ -26,5 +31,15 @@ describe('Call.vue', () => {
   it('renders props.calls', () => {
     const wrapper = getMountedComponent()
     expect(wrapper.get('option[value="abc"]').text()).toBe('7/20/2020 - Count Rugen')
+  })
+
+  it('emits on selection change', async () => {
+    const wrapper = getMountedComponent()
+    const select = wrapper.find('select')
+
+    await setSelected(select, 1)
+
+    expect(wrapper.get('select').element.value).toBe('abc')
+    expect(wrapper.emitted('update:modelValue')).toStrictEqual([['abc']])
   })
 })
