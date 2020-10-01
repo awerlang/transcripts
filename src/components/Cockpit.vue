@@ -12,12 +12,24 @@
       v-model="selected_call_id"
     />
   </div>
-  <div class="container">
-    <template v-if="!selected_call_id">
+
+  <div class="content">
+    <div
+      v-if="selected_call_id"
+      class="container"
+    >
+      <Table title="Real" />
+      <Table title="Expected" />
+    </div>
+
+    <div
+      v-else
+      class="container-stack-centered parent-margin-bottom-md text-center"
+    >
       <BusinessPeopleLogo />
       <div><strong>Selection pending</strong></div>
       <div>Select a call from top menu and a transcript analysis will be shown here</div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -27,6 +39,7 @@ import { AgentData, CallData } from '@/utils/types'
 import Agent from './Agent.vue';
 import Call from './Call.vue';
 import BusinessPeopleLogo from './BusinessPeopleLogo.vue';
+import Table from './Table.vue';
 
 type Data = {
   agents: AgentData[];
@@ -41,6 +54,7 @@ export default defineComponent({
     Agent,
     Call,
     BusinessPeopleLogo,
+    Table,
   },
   data(): Data {
     return {
@@ -93,19 +107,25 @@ export default defineComponent({
       margin-left: 8px;
     }
 }
-.container {
+.content {
   flex-grow: 1;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
+  padding: 12px;
+  background-color: hsl(183, 1%, 98%);
+}
+.container {
+  height: 100%;
   background-color: hsl(183, 1%, 98%);
 
   > * {
-    margin-bottom: 12px;
+    flex-grow: 1;
+  }
+
+  > :not(:first-child) {
+    margin-left: 12px;
+  }
+
+  > :not(:last-child) {
+    margin-right: 12px;
   }
 }
 </style>

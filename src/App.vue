@@ -26,4 +26,28 @@ body,
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
+.text-center {
+  text-align: center;
+}
+
+.parent-margin-bottom-md > * {
+  margin-bottom: 12px;
+}
+
+.container-stack-centered {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+}
+
+.font-size-sm {
+  font-size: small;
+}
 </style>
