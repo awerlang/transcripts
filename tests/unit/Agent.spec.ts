@@ -11,7 +11,7 @@ describe('Agent.vue', () => {
     })
   }
 
-  function setSelected(select: DOMWrapper<HTMLSelectElement>, index: number, selected: boolean = true) {
+  function setSelected(select: DOMWrapper<HTMLSelectElement>, index: number, selected = true) {
     select.findAll('option')[index].element.selected = selected
     return select.trigger('change')
   }
