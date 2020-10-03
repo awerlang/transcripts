@@ -39,6 +39,7 @@ body,
   display: flex;
   height: 100%;
   flex-direction: column;
+  flex-basis: 100%;
   align-items: center;
   justify-content: center;
 }

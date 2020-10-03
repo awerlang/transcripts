@@ -7,7 +7,12 @@
     <div class="content font-size-sm">
       <ol>
         <li class="item-container list-header">
-          <div>Line</div>
+          <div v-if="isScript">
+            Line
+          </div>
+          <div v-if="isTranscript">
+            Time
+          </div>
           <div>Speaker</div>
           <div>Sentence</div>
         </li>
@@ -21,7 +26,12 @@
           v-for="item in script"
           :key="item.order"
         >
-          <div>{{ item.line }}</div>
+          <div v-if="isScript">
+            {{ item.line }}
+          </div>
+          <div v-if="isTranscript">
+            {{ item.time }}
+          </div>
           <div>{{ item.speaker }}</div>
           <div>{{ item.sentence }}</div>
         </li>
@@ -35,6 +45,7 @@ import { defineComponent } from 'vue';
 
 export type ScriptLine = {
   line: number;
+  time?: string;
   speaker: string;
   sentence: string;
   matchingSentence: string;
@@ -43,6 +54,7 @@ export type ScriptLine = {
 type Data = {
   title: string;
   script: ScriptLine[];
+  type: 'script' | 'transcript';
 }
 
 function matching(script: ScriptLine[]) {
@@ -58,6 +70,11 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      required: true,
+      validator: (value: string) => ['script', 'transcript'].includes(value),
+    },
     script: {
       type: Array,
       required: true,
@@ -69,6 +86,12 @@ export default defineComponent({
     },
     matchingPct(this: Data) {
       return `${matching(this.script)}%`
+    },
+    isScript(this: Data) {
+      return this.type === 'script'
+    },
+    isTranscript(this: Data) {
+      return this.type === 'transcript'
     },
   },
 });

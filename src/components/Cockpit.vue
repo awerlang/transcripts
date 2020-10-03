@@ -19,8 +19,15 @@
       class="container"
     >
       <Table
+        v-if="transcript"
+        title="Real"
+        type="transcript"
+        :script="transcript"
+      />
+      <Table
         v-if="script"
         title="Expected"
+        type="script"
         :script="script"
       />
     </div>
@@ -50,6 +57,31 @@ type Data = {
   selected_agent_id: string | null;
   selected_call_id: string | null;
   script: ScriptLine[] | null;
+  transcript: ScriptLine[] | null;
+}
+
+function formatTime(seconds: number) {
+  const sec = seconds % 60
+  return `${Math.trunc(seconds / 60)}:${(sec < 10 ? '0' : '') + sec}`
+}
+
+function formatAgent(transcript: TranscriptData, channel: number, agents: AgentData[]): string | undefined {
+  const agent = transcript.agent.find(it => it.channel_no === channel)
+  if (agent) {
+    return agents.find(it => it.id === agent.agent_id)?.full_name
+  }
+}
+
+function formatCustomer(transcript: TranscriptData, channel: number): string | undefined {
+  const customer = transcript.customer.find(it => it.channel_no === channel)
+  if (customer) {
+    return customer.full_name
+  }
+}
+
+function formatSpeaker(transcript: TranscriptData, channel: number, agents: AgentData[]): string {
+  const name = formatAgent(transcript, channel, agents) || formatCustomer(transcript, channel) || ''
+  return name.split(' ')[0]
 }
 
 export default defineComponent({
@@ -67,6 +99,7 @@ export default defineComponent({
       selected_agent_id: null,
       selected_call_id: null,
       script: null,
+      transcript: null,
     }
   },
   computed: {
@@ -81,6 +114,15 @@ export default defineComponent({
         return {
           line: line.order + 1,
           speaker: 'Rep.',
+          sentence: line.sentence,
+          matchingSentence: line.matching_sentence,
+        }
+      })
+      this.transcript = data.transcript.map(line => {
+        return {
+          line: line.order + 1,
+          time: formatTime(line.timeFrom),
+          speaker: formatSpeaker(data, line.channel, this.agents),
           sentence: line.sentence,
           matchingSentence: line.matching_sentence,
         }

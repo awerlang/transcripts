@@ -36,4 +36,41 @@ describe('Table.vue', () => {
             '3', 'Rep.', 'Good morning',
         ])
     })
+
+    it('shows transcript', () => {
+        const wrapper = shallowMount(Table, {
+            props: {
+                title: 'Real',
+                type: 'transcript',
+                script: [{
+                    line: 1,
+                    time: '0:05',
+                    speaker: 'Inigo',
+                    sentence: 'Hello',
+                    matchingSentence: 'Hi',
+                }, {
+                    line: 2,
+                    time: '0:15',
+                    speaker: 'Rugen',
+                    sentence: 'Good afternoon',
+                    matchingSentence: 'Good',
+                }, {
+                    line: 3,
+                    time: '1:17',
+                    speaker: 'Inigo',
+                    sentence: 'Good morning',
+                    matchingSentence: '',
+                }],
+            },
+        })
+
+        expect(wrapper.find('.header > div:nth-child(1)').text()).toStrictEqual('Real')
+        expect(wrapper.find('.header > div:nth-child(2)').text()).toStrictEqual('67%')
+        expect(wrapper.findAll('li > div').map(it => it.text())).toStrictEqual([
+            'Time', 'Speaker', 'Sentence',
+            '0:05', 'Inigo', 'Hello',
+            '0:15', 'Rugen', 'Good afternoon',
+            '1:17', 'Inigo', 'Good morning',
+        ])
+    })
 })

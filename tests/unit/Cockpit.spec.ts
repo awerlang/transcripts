@@ -16,7 +16,28 @@ describe('Cockpit.vue', () => {
     "agent": [{ "agent_id": "123", "channel_no": 1 }],
     "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
     script: [{ order: 0, sentence: "Hello", matching_sentence: "Hi" }],
-    transcript: [],
+    transcript: [{
+      order: 0,
+      timeFrom: 5,
+      timeTo: 5,
+      channel: 1,
+      sentence: 'Hello',
+      matching_sentence: 'Hi',
+    }, {
+      order: 1,
+      timeFrom: 15,
+      timeTo: 15,
+      channel: 2,
+      sentence: 'Good afternoon',
+      matching_sentence: 'Good',
+    }, {
+      order: 2,
+      timeFrom: 77,
+      timeTo: 77,
+      channel: 1,
+      sentence: 'Good morning',
+      matching_sentence: '',
+    }],
   }
 
   beforeAll(() => enableFetchMocks())
@@ -103,7 +124,7 @@ describe('Cockpit.vue', () => {
       expect(el.exists()).toBe(false)
     })
 
-    it('then transcript is parsed', async () => {
+    it('then script is parsed', async () => {
       const wrapper = await getComponent()
 
       expect(fetchMock).toHaveBeenCalledTimes(1)
@@ -112,6 +133,31 @@ describe('Cockpit.vue', () => {
         speaker: 'Rep.',
         sentence: 'Hello',
         matchingSentence: 'Hi',
+      }])
+    })
+
+    it('then transcript is parsed', async () => {
+      const wrapper = await getComponent()
+
+      expect(fetchMock).toHaveBeenCalledTimes(1)
+      expect((wrapper.vm.$data as any).transcript).toStrictEqual([{
+        line: 1,
+        time: '0:05',
+        speaker: 'Inigo',
+        sentence: 'Hello',
+        matchingSentence: 'Hi',
+      }, {
+        line: 2,
+        time: '0:15',
+        speaker: 'Count',
+        sentence: 'Good afternoon',
+        matchingSentence: 'Good',
+      }, {
+        line: 3,
+        time: '1:17',
+        speaker: 'Inigo',
+        sentence: 'Good morning',
+        matchingSentence: '',
       }])
     })
 
