@@ -73,4 +73,41 @@ describe('Table.vue', () => {
             '1:17', 'Inigo', 'Good morning',
         ])
     })
+
+    it('highlights similar sentences', () => {
+        const wrapper = shallowMount(Table, {
+            props: {
+                title: 'Real',
+                type: 'transcript',
+                script: [{
+                    line: 1,
+                    time: '0:05',
+                    speaker: 'Inigo',
+                    sentence: 'Hello',
+                    matchingSentence: 'Hi',
+                    similarity: 0.2,
+                }, {
+                    line: 2,
+                    time: '0:15',
+                    speaker: 'Rugen',
+                    sentence: 'Good afternoon',
+                    matchingSentence: 'Good',
+                    similarity: 0.5,
+                }, {
+                    line: 3,
+                    time: '1:17',
+                    speaker: 'Inigo',
+                    sentence: 'Good morning',
+                    matchingSentence: '',
+                    similarity: 0.0,
+                }],
+            },
+        })
+
+        expect(wrapper.findAll('.item-container:not(.list-header) > .sentence-column').map(it => it.classes('sentence-highlight'))).toStrictEqual([
+            false,
+            true,
+            false,
+        ])
+    })
 })

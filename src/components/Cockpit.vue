@@ -116,6 +116,7 @@ export default defineComponent({
           speaker: 'Rep.',
           sentence: line.sentence,
           matchingSentence: line.matching_sentence,
+          similarity: line.similarity,
         }
       })
       this.transcript = data.transcript.map(line => {
@@ -125,6 +126,7 @@ export default defineComponent({
           speaker: formatSpeaker(data, line.channel, this.agents),
           sentence: line.sentence,
           matchingSentence: line.matching_sentence,
+          similarity: line.similarity,
         }
       })
     },

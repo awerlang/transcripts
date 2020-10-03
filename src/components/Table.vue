@@ -33,7 +33,12 @@
             {{ item.time }}
           </div>
           <div>{{ item.speaker }}</div>
-          <div>{{ item.sentence }}</div>
+          <div
+            class="sentence-column"
+            :class="{ 'sentence-highlight': isSimilar(item) }"
+          >
+            {{ item.sentence }}
+          </div>
         </li>
       </ol>
     </div>
@@ -49,6 +54,7 @@ export type ScriptLine = {
   speaker: string;
   sentence: string;
   matchingSentence: string;
+  similarity: number;
 }
 
 type Data = {
@@ -79,6 +85,10 @@ export default defineComponent({
       type: Array,
       required: true,
     },
+    similarity: {
+      type: Number,
+      default: 0.38,
+    },
   },
   computed: {
     matching(this: Data) {
@@ -94,6 +104,11 @@ export default defineComponent({
       return this.type === 'transcript'
     },
   },
+  methods: {
+    isSimilar(item: ScriptLine) {
+      return item.similarity >= this.similarity
+    },
+  }
 });
 </script>
 
@@ -133,8 +148,15 @@ export default defineComponent({
     display: grid;
     grid-template-columns: 4em 6em auto;
     padding: 8px;
+
+    & > * {
+      padding: 4px;
+    }
 }
 .list-header {
     font-weight: bold;
+}
+.sentence-highlight {
+    background-color: var(--color);
 }
 </style>

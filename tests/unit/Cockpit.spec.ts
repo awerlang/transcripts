@@ -15,7 +15,7 @@ describe('Cockpit.vue', () => {
   const transcript: TranscriptData = {
     "agent": [{ "agent_id": "123", "channel_no": 1 }],
     "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
-    script: [{ order: 0, sentence: "Hello", matching_sentence: "Hi" }],
+    script: [{ order: 0, sentence: "Hello", matching_sentence: "Hi", similarity: 0.5 }],
     transcript: [{
       order: 0,
       timeFrom: 5,
@@ -23,6 +23,7 @@ describe('Cockpit.vue', () => {
       channel: 1,
       sentence: 'Hello',
       matching_sentence: 'Hi',
+      similarity: 0.5,
     }, {
       order: 1,
       timeFrom: 15,
@@ -30,6 +31,7 @@ describe('Cockpit.vue', () => {
       channel: 2,
       sentence: 'Good afternoon',
       matching_sentence: 'Good',
+      similarity: 0.5,
     }, {
       order: 2,
       timeFrom: 77,
@@ -37,6 +39,7 @@ describe('Cockpit.vue', () => {
       channel: 1,
       sentence: 'Good morning',
       matching_sentence: '',
+      similarity: 0.5,
     }],
   }
 
@@ -133,6 +136,7 @@ describe('Cockpit.vue', () => {
         speaker: 'Rep.',
         sentence: 'Hello',
         matchingSentence: 'Hi',
+        similarity: 0.5,
       }])
     })
 
@@ -146,18 +150,21 @@ describe('Cockpit.vue', () => {
         speaker: 'Inigo',
         sentence: 'Hello',
         matchingSentence: 'Hi',
+        similarity: 0.5,
       }, {
         line: 2,
         time: '0:15',
         speaker: 'Count',
         sentence: 'Good afternoon',
         matchingSentence: 'Good',
+        similarity: 0.5,
       }, {
         line: 3,
         time: '1:17',
         speaker: 'Inigo',
         sentence: 'Good morning',
         matchingSentence: '',
+        similarity: 0.5,
       }])
     })
 

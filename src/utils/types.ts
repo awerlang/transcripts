@@ -28,6 +28,7 @@ export type TranscriptData = {
         order: number;
         sentence: string;
         matching_sentence: string;
+        similarity: number;
     }[];
     transcript: {
         order: number;
@@ -36,5 +37,6 @@ export type TranscriptData = {
         channel: number;
         timeFrom: number;
         timeTo: number;
+        similarity: number;
     }[];
 }
