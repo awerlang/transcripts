@@ -2,13 +2,12 @@
   <div class="chrome container-stack-centered">
     <div class="header">
       <div>{{ title }}</div>
-      <div>35%</div>
-      <div>pie</div>
+      <div>{{ matchingPct }}</div>
     </div>
     <div class="content font-size-sm">
       <ol>
         <li class="item-container list-header">
-          <div>Time</div>
+          <div>Line</div>
           <div>Speaker</div>
           <div>Sentence</div>
         </li>
@@ -17,28 +16,14 @@
           <hr>
         </li>
 
-        <li class="item-container">
-          <div>0:15</div>
-          <div>Inigo</div>
-          <div>Sentence</div>
-        </li>
-
-        <li class="item-container">
-          <div></div>
-          <div>Rugen</div>
-          <div>Hi.</div>
-        </li>
-
-        <li class="item-container">
-          <div>0:20</div>
-          <div>Inigo</div>
-          <div>Hi.</div>
-        </li>
-
-        <li class="item-container">
-          <div>0:24</div>
-          <div>Rugen</div>
-          <div>Yes, it's Count Rugen speaking.</div>
+        <li
+          class="item-container"
+          v-for="item in script"
+          :key="item.order"
+        >
+          <div>{{ item.line }}</div>
+          <div>{{ item.speaker }}</div>
+          <div>{{ item.sentence }}</div>
         </li>
       </ol>
     </div>
@@ -47,6 +32,24 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+
+export type ScriptLine = {
+  line: number;
+  speaker: string;
+  sentence: string;
+  matchingSentence: string;
+}
+
+type Data = {
+  title: string;
+  script: ScriptLine[];
+}
+
+function matching(script: ScriptLine[]) {
+  const total = script.length
+  const matches = script.reduce((count, item) => count + (item.matchingSentence ? 1 : 0), 0)
+  return Math.round(matches / total * 100)
+}
 
 export default defineComponent({
   name: 'Table',
@@ -58,6 +61,14 @@ export default defineComponent({
     script: {
       type: Array,
       required: true,
+    },
+  },
+  computed: {
+    matching(this: Data) {
+      return matching(this.script)
+    },
+    matchingPct(this: Data) {
+      return `${matching(this.script)}%`
     },
   },
 });

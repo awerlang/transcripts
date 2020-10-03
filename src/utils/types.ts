@@ -20,3 +20,21 @@ export type CallData = {
     agent: CallAgentData[];
     customer: CallCustomerData[];
 }
+
+export type TranscriptData = {
+    agent: CallAgentData[];
+    customer: CallCustomerData[];
+    script: {
+        order: number;
+        sentence: string;
+        matching_sentence: string;
+    }[];
+    transcript: {
+        order: number;
+        sentence: string;
+        matching_sentence: string;
+        channel: number;
+        timeFrom: number;
+        timeTo: number;
+    }[];
+}

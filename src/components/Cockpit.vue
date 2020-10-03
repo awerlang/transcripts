@@ -18,8 +18,11 @@
       v-if="selected_call_id"
       class="container"
     >
-      <Table title="Real" />
-      <Table title="Expected" />
+      <Table
+        v-if="script"
+        title="Expected"
+        :script="script"
+      />
     </div>
 
     <div
@@ -35,17 +38,18 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { AgentData, CallData } from '@/utils/types'
+import { AgentData, CallData, TranscriptData } from '@/utils/types'
 import Agent from './Agent.vue';
 import Call from './Call.vue';
 import BusinessPeopleLogo from './BusinessPeopleLogo.vue';
-import Table from './Table.vue';
+import Table, { ScriptLine } from './Table.vue';
 
 type Data = {
   agents: AgentData[];
   all_calls: CallData[];
   selected_agent_id: string | null;
   selected_call_id: string | null;
+  script: ScriptLine[] | null;
 }
 
 export default defineComponent({
@@ -62,6 +66,7 @@ export default defineComponent({
       all_calls: [],
       selected_agent_id: null,
       selected_call_id: null,
+      script: null,
     }
   },
   computed: {
@@ -70,9 +75,31 @@ export default defineComponent({
       return this.all_calls.filter(it => it.agent.some(ag => ag.agent_id === agent_id))
     }
   },
+  methods: {
+    parseTranscript(data: TranscriptData) {
+      this.script = data.script.map(line => {
+        return {
+          line: line.order + 1,
+          speaker: 'Rep.',
+          sentence: line.sentence,
+          matchingSentence: line.matching_sentence,
+        }
+      })
+    },
+  },
   watch: {
     selected_agent_id() {
       this.selected_call_id = null
+    },
+    selected_call_id(value: string) {
+      this.script = null
+      if (!value) {
+        return
+      }
+
+      fetch(`/calls/${value}/transcript`)
+        .then(response => response.json())
+        .then(data => this.parseTranscript(data))
     }
   },
   created() {
