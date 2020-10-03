@@ -13,16 +13,19 @@ describe('Table.vue', () => {
                     speaker: 'Rep.',
                     sentence: 'Hello',
                     matchingSentence: 'Hi',
+                    similarity: 0.5,
                 }, {
                     line: 2,
                     speaker: 'Rep.',
                     sentence: 'Good afternoon',
                     matchingSentence: '',
+                    similarity: 0.5,
                 }, {
                     line: 3,
                     speaker: 'Rep.',
                     sentence: 'Good morning',
                     matchingSentence: '',
+                    similarity: 0.5,
                 }],
             },
         })
@@ -48,18 +51,21 @@ describe('Table.vue', () => {
                     speaker: 'Inigo',
                     sentence: 'Hello',
                     matchingSentence: 'Hi',
+                    similarity: 0.5,
                 }, {
                     line: 2,
                     time: '0:15',
                     speaker: 'Rugen',
                     sentence: 'Good afternoon',
                     matchingSentence: 'Good',
+                    similarity: 0.5,
                 }, {
                     line: 3,
                     time: '1:17',
                     speaker: 'Inigo',
                     sentence: 'Good morning',
                     matchingSentence: '',
+                    similarity: 0.5,
                 }],
             },
         })
@@ -99,7 +105,7 @@ describe('Table.vue', () => {
                     speaker: 'Inigo',
                     sentence: 'Good morning',
                     matchingSentence: '',
-                    similarity: 0.0,
+                    similarity: 0.5,
                 }],
             },
         })

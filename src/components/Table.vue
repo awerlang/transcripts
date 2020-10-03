@@ -62,11 +62,16 @@ type Data = {
   title: string;
   script: ScriptLine[];
   type: 'script' | 'transcript';
+  similarity: number;
 }
 
-function matching(script: ScriptLine[]) {
+function isSimilar(line: ScriptLine, threshold: number): boolean {
+  return line.matchingSentence ? line.similarity >= threshold : false
+}
+
+function matching(script: ScriptLine[], threshold: number): number {
   const total = script.length
-  const matches = script.reduce((count, item) => count + (item.matchingSentence ? 1 : 0), 0)
+  const matches = script.reduce((count, item) => count + (isSimilar(item, threshold) ? 1 : 0), 0)
   return Math.round(matches / total * 100)
 }
 
@@ -93,10 +98,10 @@ export default defineComponent({
   },
   computed: {
     matching(this: Data) {
-      return matching(this.script)
+      return matching(this.script, this.similarity)
     },
     matchingPct(this: Data) {
-      return `${matching(this.script)}%`
+      return `${matching(this.script, this.similarity)}%`
     },
     isScript(this: Data) {
       return this.type === 'script'
@@ -106,11 +111,11 @@ export default defineComponent({
     },
   },
   methods: {
-    isSimilar(item: ScriptLine) {
-      return item.similarity >= this.similarity
+    isSimilar(item: ScriptLine): boolean {
+      return isSimilar(item, this.similarity)
     },
-    getTooltip(item: ScriptLine) {
-      if (!item.matchingSentence || item.similarity <= this.similarity) {
+    getTooltip(item: ScriptLine): string {
+      if (!this.isSimilar(item)) {
         return ''
       }
       return `${item.similarity * 100}% matching with line "${item.matchingSentence}"`
