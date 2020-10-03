@@ -36,6 +36,7 @@
           <div
             class="sentence-column"
             :class="{ 'sentence-highlight': isSimilar(item) }"
+            :title="getTooltip(item)"
           >
             {{ item.sentence }}
           </div>
@@ -107,6 +108,12 @@ export default defineComponent({
   methods: {
     isSimilar(item: ScriptLine) {
       return item.similarity >= this.similarity
+    },
+    getTooltip(item: ScriptLine) {
+      if (!item.matchingSentence || item.similarity <= this.similarity) {
+        return ''
+      }
+      return `${item.similarity * 100}% matching with line "${item.matchingSentence}"`
     },
   }
 });

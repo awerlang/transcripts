@@ -74,8 +74,8 @@ describe('Table.vue', () => {
         ])
     })
 
-    it('highlights similar sentences', () => {
-        const wrapper = shallowMount(Table, {
+    function getMountedComponent() {
+        return shallowMount(Table, {
             props: {
                 title: 'Real',
                 type: 'transcript',
@@ -103,11 +103,23 @@ describe('Table.vue', () => {
                 }],
             },
         })
+    }
 
+    it('highlights similar sentences', () => {
+        const wrapper = getMountedComponent()
         expect(wrapper.findAll('.item-container:not(.list-header) > .sentence-column').map(it => it.classes('sentence-highlight'))).toStrictEqual([
             false,
             true,
             false,
+        ])
+    })
+
+    it('matching sentences are displayed in a tooltip', () => {
+        const wrapper = getMountedComponent()
+        expect(wrapper.findAll('.item-container:not(.list-header) > .sentence-column').map(it => it.attributes('title'))).toStrictEqual([
+            '',
+            '50% matching with line "Good"',
+            '',
         ])
     })
 })
