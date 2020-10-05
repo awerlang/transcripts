@@ -141,7 +141,7 @@ export default defineComponent({
     padding: 8px;
     font-weight: bold;
 
-    :first-child {
+    > :first-child {
         flex-grow: 1;
     }
 }
@@ -150,7 +150,7 @@ export default defineComponent({
     width: 100%;
     background-color: hsl(183, 1%, 99%);
 
-    ol {
+    > ol {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -161,7 +161,7 @@ export default defineComponent({
     grid-template-columns: 4em 6em auto;
     padding: 8px;
 
-    & > * {
+    > * {
       padding: 4px;
     }
 }
