@@ -12,7 +12,10 @@
       v-model="selected_call_id"
     />
     <div class="flex-grow" />
-    <div class="font-size-sm">
+    <div
+      v-if="selected_call_id"
+      class="font-size-sm"
+    >
       <span class="text-upper">Matching Sensitivity</span>
       <Slider
         class="sensitivity-slider"
@@ -114,7 +117,7 @@ export default defineComponent({
       selected_call_id: null,
       script: null,
       transcript: null,
-      sensitivity: 0.38,
+      sensitivity: 0,
     }
   },
   computed: {
@@ -158,6 +161,8 @@ export default defineComponent({
       if (!value) {
         return
       }
+
+      this.sensitivity = 0.38
 
       fetch(`/calls/${value}/transcript`)
         .then(response => response.json())

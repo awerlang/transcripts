@@ -174,5 +174,13 @@ describe('Cockpit.vue', () => {
       const el = wrapper.find('table-stub')
       expect(el.exists()).toBe(true)
     })
+
+    it('then matching sensitivity slider is reset to default value', async () => {
+      const wrapper = await getComponent()
+
+      const el = wrapper.find('slider-stub')
+      expect(el.exists()).toBe(true)
+      expect((wrapper.vm as any).sensitivity).toBe(0.38)
+    })
   })
 })
