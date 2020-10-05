@@ -25,6 +25,9 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+
+  --active-color: hsl(188, 77%, 18%);
+  --inactive-color: darkgray;
 }
 
 .text-center {
@@ -48,7 +51,15 @@ body,
   display: flex;
 }
 
+.flex-grow {
+  flex-grow: 1;
+}
+
 .font-size-sm {
   font-size: small;
+}
+
+.text-upper {
+  text-transform: uppercase;
 }
 </style>

@@ -11,6 +11,15 @@
       :calls="calls"
       v-model="selected_call_id"
     />
+    <div class="flex-grow" />
+    <div class="font-size-sm">
+      <span class="text-upper">Matching Sensitivity</span>
+      <Slider
+        class="sensitivity-slider"
+        v-model="sensitivity"
+      />
+      <span class="sensitivity-value">{{ sensitivityPct }}%</span>
+    </div>
   </div>
 
   <div class="content">
@@ -23,12 +32,14 @@
         title="Real"
         type="transcript"
         :script="transcript"
+        :similarity="sensitivity"
       />
       <Table
         v-if="script"
         title="Expected"
         type="script"
         :script="script"
+        :similarity="sensitivity"
       />
     </div>
 
@@ -50,6 +61,7 @@ import Agent from './Agent.vue';
 import Call from './Call.vue';
 import BusinessPeopleLogo from './BusinessPeopleLogo.vue';
 import Table, { ScriptLine } from './Table.vue';
+import Slider from './Slider.vue';
 
 type Data = {
   agents: AgentData[];
@@ -58,6 +70,7 @@ type Data = {
   selected_call_id: string | null;
   script: ScriptLine[] | null;
   transcript: ScriptLine[] | null;
+  sensitivity: number;
 }
 
 function formatTime(seconds: number) {
@@ -91,6 +104,7 @@ export default defineComponent({
     Call,
     BusinessPeopleLogo,
     Table,
+    Slider,
   },
   data(): Data {
     return {
@@ -100,13 +114,17 @@ export default defineComponent({
       selected_call_id: null,
       script: null,
       transcript: null,
+      sensitivity: 0.38,
     }
   },
   computed: {
     calls(this: Data) {
       const agent_id = this.selected_agent_id
       return this.all_calls.filter(it => it.agent.some(ag => ag.agent_id === agent_id))
-    }
+    },
+    sensitivityPct(this: Data) {
+      return (this.sensitivity * 100).toFixed(0)
+    },
   },
   methods: {
     parseTranscript(data: TranscriptData) {
@@ -198,5 +216,14 @@ export default defineComponent({
   > :not(:last-child) {
     margin-right: 12px;
   }
+}
+.sensitivity-slider {
+  width: 200px;
+}
+.sensitivity-value {
+  display: inline-block;
+  width: 4em;
+  font-weight: bold;
+  text-align: right;
 }
 </style>
