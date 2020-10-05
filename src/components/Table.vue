@@ -3,6 +3,10 @@
     <div class="header">
       <div>{{ title }}</div>
       <div>{{ matchingPct }}</div>
+      <PieChart
+        class="pie-chart"
+        :value="matching"
+      />
     </div>
     <div class="content font-size-sm">
       <ol>
@@ -49,6 +53,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+import PieChart from './PieChart.vue';
+
 export type ScriptLine = {
   line: number;
   time?: string;
@@ -72,11 +78,14 @@ function isSimilar(line: ScriptLine, threshold: number): boolean {
 function matching(script: ScriptLine[], threshold: number): number {
   const total = script.length
   const matches = script.reduce((count, item) => count + (isSimilar(item, threshold) ? 1 : 0), 0)
-  return Math.round(matches / total * 100)
+  return matches / total
 }
 
 export default defineComponent({
   name: 'Table',
+  components: {
+    PieChart,
+  },
   props: {
     title: {
       type: String,
@@ -101,7 +110,8 @@ export default defineComponent({
       return matching(this.script, this.similarity)
     },
     matchingPct(this: Data) {
-      return `${matching(this.script, this.similarity)}%`
+      const value = Math.round(matching(this.script, this.similarity) * 100)
+      return `${value}%`
     },
     isScript(this: Data) {
       return this.type === 'script'
@@ -135,6 +145,9 @@ export default defineComponent({
     > * {
         width: 100%;
     }
+}
+.pie-chart {
+  width: 24px;
 }
 .header {
     display: flex;
