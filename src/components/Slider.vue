@@ -4,17 +4,22 @@
     class="slider"
     :style="{ '--value': asPercent + '%' }"
     @mousedown.left="mousedown"
+    @keydown.left="arrowLeft"
+    @keydown.right="arrowRight"
   >
     <div class="slider-left" />
     <div class="slider-right" />
-    <div class="slider-knob" />
+    <div
+      class="slider-knob"
+      tabindex="0"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { clamp } from '@/utils/common';
+import { clamp, compareFloat } from '@/utils/common';
 
 type Data = {
   selected: number;
@@ -34,7 +39,10 @@ export default defineComponent({
         return this.modelValue
       },
       set(value: number) {
-        this.$emit('update:modelValue', clamp(0, 1, value))
+        const newValue = clamp(0, 1, value)
+        if (!compareFloat(newValue, this.selected)) {
+          this.$emit('update:modelValue', newValue)
+        }
       }
     },
     asPercent(this: Data) {
@@ -47,6 +55,12 @@ export default defineComponent({
       const newValue = event.clientX - parentEl.offsetLeft
       const widthPerUnit = parentEl.clientWidth / 100
       this.selected = newValue / widthPerUnit / 100
+    },
+    arrowLeft() {
+      this.selected = this.selected - 0.01
+    },
+    arrowRight() {
+      this.selected = this.selected + 0.01
     },
   }
 });
