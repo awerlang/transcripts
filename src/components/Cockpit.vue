@@ -124,6 +124,7 @@ export default defineComponent({
     calls(this: Data) {
       const agent_id = this.selected_agent_id
       return this.all_calls.filter(it => it.agent.some(ag => ag.agent_id === agent_id))
+        .sort((a, b) => b.call_start_time.localeCompare(a.call_start_time))
     },
     sensitivityPct(this: Data) {
       return (this.sensitivity * 100).toFixed(0)

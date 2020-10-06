@@ -8,6 +8,11 @@ describe('Call.vue', () => {
     "agent": [{ "agent_id": "123", "channel_no": 1 }],
     "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
     "call_start_time": "2020-07-20 01:00:45",
+  }, {
+    "id": "def",
+    "agent": [{ "agent_id": "123", "channel_no": 1 }],
+    "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
+    "call_start_time": "2020-06-26 01:00:45",
   }]
 
   function getMountedComponent() {
@@ -30,7 +35,11 @@ describe('Call.vue', () => {
 
   it('renders props.calls', () => {
     const wrapper = getMountedComponent()
-    expect(wrapper.get('option[value="abc"]').text()).toBe('7/20/2020 - Count Rugen')
+    expect(wrapper.findAll('option').map(it => [it.attributes('value'), it.text()])).toStrictEqual([
+      ['null', 'Call'],
+      ['abc', '7/20/2020 - Count Rugen'],
+      ['def', '6/26/2020 - Count Rugen']
+    ])
   })
 
   it('emits on selection change', async () => {

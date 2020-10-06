@@ -1,48 +1,10 @@
 import { shallowMount, flushPromises } from '@vue/test-utils'
 import { enableFetchMocks } from 'jest-fetch-mock'
 
-import { CallData, TranscriptData } from '@/utils/types'
+import { AgentData, CallData, TranscriptData } from '@/utils/types'
 import Cockpit from '@/components/Cockpit.vue'
 
 describe('Cockpit.vue', () => {
-  const agents = [{ id: '123', full_name: 'Inigo Montoya' }]
-  const calls: CallData[] = [{
-    "id": "abc",
-    "agent": [{ "agent_id": "123", "channel_no": 1 }],
-    "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
-    "call_start_time": "2020-07-20 01:00:45",
-  }]
-  const transcript: TranscriptData = {
-    "agent": [{ "agent_id": "123", "channel_no": 1 }],
-    "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
-    script: [{ order: 0, sentence: "Hello", matching_sentence: "Hi", similarity: 0.5 }],
-    transcript: [{
-      order: 0,
-      timeFrom: 5,
-      timeTo: 5,
-      channel: 1,
-      sentence: 'Hello',
-      matching_sentence: 'Hi',
-      similarity: 0.5,
-    }, {
-      order: 1,
-      timeFrom: 15,
-      timeTo: 15,
-      channel: 2,
-      sentence: 'Good afternoon',
-      matching_sentence: 'Good',
-      similarity: 0.5,
-    }, {
-      order: 2,
-      timeFrom: 77,
-      timeTo: 77,
-      channel: 1,
-      sentence: 'Good morning',
-      matching_sentence: '',
-      similarity: 0.5,
-    }],
-  }
-
   beforeAll(() => enableFetchMocks())
 
   function getMountedComponent() {
@@ -51,6 +13,19 @@ describe('Cockpit.vue', () => {
   }
 
   beforeEach(() => {
+    const agents = [{ id: '123', full_name: 'Inigo Montoya' }]
+    const calls: CallData[] = [{
+      "id": "def",
+      "agent": [{ "agent_id": "123", "channel_no": 1 }],
+      "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
+      "call_start_time": "2020-06-26 01:00:45",
+    }, {
+      "id": "abc",
+      "agent": [{ "agent_id": "123", "channel_no": 1 }],
+      "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
+      "call_start_time": "2020-07-20 01:00:45",
+    }]
+
     fetchMock.doMockOnceIf('/agents').mockResponseOnce(JSON.stringify(agents))
     fetchMock.doMockOnceIf('/calls').mockResponseOnce(JSON.stringify(calls))
   })
@@ -63,8 +38,8 @@ describe('Cockpit.vue', () => {
     const wrapper = await getMountedComponent()
 
     const vm: any = wrapper.vm.$data
-    expect(vm.agents).toStrictEqual(agents)
-    expect(vm.all_calls).toStrictEqual(calls)
+    expect(vm.agents.map((it: AgentData) => it.id)).toStrictEqual(['123'])
+    expect(vm.all_calls.map((it: CallData) => it.id)).toStrictEqual(['def', 'abc'])
     expect((wrapper.vm as any).calls).toStrictEqual([])
   })
 
@@ -82,10 +57,41 @@ describe('Cockpit.vue', () => {
     vm.selected_agent_id = '123'
     await wrapper.vm.$nextTick()
 
-    expect((wrapper.vm as any).calls).toStrictEqual(calls)
+    expect((wrapper.vm as any).calls.map((it: CallData) => it.id)).toStrictEqual(['abc', 'def'])
   })
 
   function mockTranscript() {
+    const transcript: TranscriptData = {
+      "agent": [{ "agent_id": "123", "channel_no": 1 }],
+      "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
+      script: [{ order: 0, sentence: "Hello", matching_sentence: "Hi", similarity: 0.5 }],
+      transcript: [{
+        order: 0,
+        timeFrom: 5,
+        timeTo: 5,
+        channel: 1,
+        sentence: 'Hello',
+        matching_sentence: 'Hi',
+        similarity: 0.5,
+      }, {
+        order: 1,
+        timeFrom: 15,
+        timeTo: 15,
+        channel: 2,
+        sentence: 'Good afternoon',
+        matching_sentence: 'Good',
+        similarity: 0.5,
+      }, {
+        order: 2,
+        timeFrom: 77,
+        timeTo: 77,
+        channel: 1,
+        sentence: 'Good morning',
+        matching_sentence: '',
+        similarity: 0.5,
+      }],
+    }
+
     return fetchMock.doMockOnceIf('/calls/abc/transcript')
       .mockResponseOnce(JSON.stringify(transcript))
   }
