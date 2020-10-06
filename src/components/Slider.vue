@@ -3,15 +3,23 @@
     ref="parent"
     class="slider"
     :style="{ '--value': asPercent + '%' }"
-    @mousedown.left="mousedown"
     @keydown.left="arrowLeft"
     @keydown.right="arrowRight"
+    @mousemove="sliderMousemove"
   >
-    <div class="slider-left" />
-    <div class="slider-right" />
+    <div
+      class="slider-left"
+      @mousedown.left="sliderMousedown"
+    />
+    <div
+      class="slider-right"
+      @mousedown.left="sliderMousedown"
+    />
     <div
       class="slider-knob"
       tabindex="0"
+      @mousedown.left="knobMousedown"
+      @mouseup.left="knobMouseup"
     />
   </div>
 </template>
@@ -33,6 +41,11 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      knobPressed: false,
+    }
+  },
   computed: {
     selected: {
       get(): number {
@@ -50,11 +63,25 @@ export default defineComponent({
     }
   },
   methods: {
-    mousedown(event: MouseEvent) {
+    updateFromMouse(event: MouseEvent) {
       const parentEl = this.$refs.parent as HTMLElement
       const newValue = event.clientX - parentEl.offsetLeft
       const widthPerUnit = parentEl.clientWidth / 100
       this.selected = newValue / widthPerUnit / 100
+    },
+    sliderMousedown(event: MouseEvent) {
+      this.updateFromMouse(event)
+    },
+    sliderMousemove(event: MouseEvent) {
+      if (this.knobPressed) {
+        this.updateFromMouse(event)
+      }
+    },
+    knobMousedown() {
+      this.knobPressed = true
+    },
+    knobMouseup() {
+      this.knobPressed = false
     },
     arrowLeft() {
       this.selected = this.selected - 0.01
