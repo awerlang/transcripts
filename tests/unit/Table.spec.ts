@@ -32,8 +32,10 @@ describe('Table.vue', () => {
 
         expect(wrapper.find('.header > div:nth-child(1)').text()).toStrictEqual('Expected')
         expect(wrapper.find('.header > div:nth-child(2)').text()).toStrictEqual('33%')
-        expect(wrapper.findAll('li > div').map(it => it.text())).toStrictEqual([
+        expect(wrapper.findAll('.list-header > div').map(it => it.text())).toStrictEqual([
             'Line', 'Speaker', 'Sentence',
+        ])
+        expect(wrapper.findAll('li > div').map(it => it.text())).toStrictEqual([
             '1', 'Rep.', 'Hello',
             '2', 'Rep.', 'Good afternoon',
             '3', 'Rep.', 'Good morning',
@@ -72,8 +74,10 @@ describe('Table.vue', () => {
 
         expect(wrapper.find('.header > div:nth-child(1)').text()).toStrictEqual('Real')
         expect(wrapper.find('.header > div:nth-child(2)').text()).toStrictEqual('67%')
-        expect(wrapper.findAll('li > div').map(it => it.text())).toStrictEqual([
+        expect(wrapper.findAll('.list-header > div').map(it => it.text())).toStrictEqual([
             'Time', 'Speaker', 'Sentence',
+        ])
+        expect(wrapper.findAll('li > div').map(it => it.text())).toStrictEqual([
             '0:05', 'Inigo', 'Hello',
             '0:15', 'Rugen', 'Good afternoon',
             '1:17', 'Inigo', 'Good morning',
