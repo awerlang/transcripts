@@ -3,6 +3,24 @@ import { shallowMount } from '@vue/test-utils'
 import Table from '@/components/Table.vue'
 
 describe('Table.vue', () => {
+    it('shows message when no data is available', () => {
+        const wrapper = shallowMount(Table, {
+            props: {
+                title: 'Real',
+                type: 'transcript',
+                script: [],
+            },
+        })
+
+        expect(wrapper.find('.header > div:nth-child(1)').text()).toStrictEqual('Real')
+        expect(wrapper.find('.header > div:nth-child(2)').text()).toStrictEqual('-%')
+        expect(wrapper.findAll('.list-header > div').map(it => it.text())).toStrictEqual([
+            'Time', 'Speaker', 'Sentence',
+        ])
+        expect(wrapper.find('.scrollable-area > div').text()).toStrictEqual('Real data is not available yet.')
+        expect(wrapper.findAll('li > div').map(it => it.text())).toStrictEqual([])
+    })
+
     it('shows script', () => {
         const wrapper = shallowMount(Table, {
             props: {

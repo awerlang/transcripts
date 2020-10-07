@@ -29,6 +29,7 @@ export default defineComponent({
     value: {
       type: Number,
       required: true,
+      validator: (value: number) => value >= 0 && value <= 1,
     },
   },
   computed: {

@@ -24,6 +24,13 @@
       </div>
 
       <ol class="scrollable-area">
+        <div
+          v-if="script.length === 0"
+          class="text-center"
+        >
+          {{ title }} data is not available yet.
+        </div>
+
         <li
           class="item-container"
           v-for="item in script"
@@ -106,9 +113,15 @@ export default defineComponent({
   },
   computed: {
     matching(this: Data) {
+      if (this.script.length === 0) {
+        return 0
+      }
       return matching(this.script, this.similarity)
     },
     matchingPct(this: Data) {
+      if (this.script.length === 0) {
+        return '-%'
+      }
       const value = Math.round(matching(this.script, this.similarity) * 100)
       return `${value}%`
     },

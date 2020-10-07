@@ -59,6 +59,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { AgentData, CallData, TranscriptData } from '@/utils/types'
+import { BusinessError } from '@/utils/errors'
 import Agent from './Agent.vue';
 import Call from './Call.vue';
 import BusinessPeopleLogo from './BusinessPeopleLogo.vue';
@@ -158,6 +159,7 @@ export default defineComponent({
     },
     selected_call_id(value: string) {
       this.script = null
+      this.transcript = null
       if (!value) {
         return
       }
@@ -165,8 +167,19 @@ export default defineComponent({
       this.sensitivity = 0.38
 
       fetch(`/calls/${value}/transcript`)
-        .then(response => response.json())
-        .then(data => this.parseTranscript(data))
+        .then<TranscriptData | BusinessError>(response => {
+          if (!response.ok) {
+            return new BusinessError('Transcript not available yet')
+          }
+          return response.json() as Promise<TranscriptData>
+        })
+        .then(data => {
+          if (data instanceof Error) {
+            // TODO: present a message
+            return
+          }
+          this.parseTranscript(data)
+        })
     }
   },
   created() {
