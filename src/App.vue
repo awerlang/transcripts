@@ -30,12 +30,31 @@ body,
   --inactive-color: darkgray;
 }
 
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #777;
+}
+
 .text-center {
   text-align: center;
 }
 
 .parent-margin-bottom-md > * {
   margin-bottom: 12px;
+}
+
+.margin-left-auto {
+  margin-left: auto !important;
 }
 
 .container-stack-centered {

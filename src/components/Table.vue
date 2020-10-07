@@ -1,30 +1,29 @@
 <template>
   <div class="chrome container-stack-centered">
     <div class="header">
-      <div>{{ title }}</div>
+      <div class="flex-grow">
+        {{ title }}
+      </div>
       <div>{{ matchingPct }}</div>
       <PieChart
         class="pie-chart"
         :value="matching"
       />
     </div>
+
     <div class="content font-size-sm">
-      <ol>
-        <li class="item-container list-header">
-          <div v-if="isScript">
-            Line
-          </div>
-          <div v-if="isTranscript">
-            Time
-          </div>
-          <div>Speaker</div>
-          <div>Sentence</div>
-        </li>
+      <div class="item-container list-header">
+        <div v-if="isScript">
+          Line
+        </div>
+        <div v-if="isTranscript">
+          Time
+        </div>
+        <div>Speaker</div>
+        <div>Sentence</div>
+      </div>
 
-        <li>
-          <hr>
-        </li>
-
+      <ol class="scrollable-area">
         <li
           class="item-container"
           v-for="item in script"
@@ -151,28 +150,29 @@ export default defineComponent({
 }
 .header {
     display: flex;
-    padding: 8px;
+    padding: 4px 0;
     font-weight: bold;
 
-    > :first-child {
-        flex-grow: 1;
+    > *:first-child {
+      margin-left: 18px;
+    }
+
+    > *:last-child {
+      margin-left: 8px;
+      margin-right: 18px;
     }
 }
 .content {
-    flex-grow: 1;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: auto;
     background-color: hsl(183, 1%, 99%);
-
-    > ol {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
 }
 .item-container {
     display: grid;
     grid-template-columns: 4em 6em auto;
-    padding: 8px;
+    margin: 0 16px 16px;
 
     > * {
       padding: 4px;
@@ -180,6 +180,16 @@ export default defineComponent({
 }
 .list-header {
     font-weight: bold;
+    border-bottom: solid 1px #ccc;
+    margin-top: 12px;
+    padding-bottom: 8px;
+}
+.scrollable-area {
+    flex: 1;
+    overflow: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 .sentence-highlight {
     background-color: var(--color);

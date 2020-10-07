@@ -104,16 +104,18 @@ export default defineComponent({
 .slider-left, .slider-right {
     position: absolute;
     top: 4px;
-    border-top: solid 2px;
+    height: 1px;
+    border: solid 1px var(--color);
+    background-color: var(--color);
 }
 .slider-left {
+    --color: var(--active-color);
     width: var(--value);
-    border-top-color: var(--active-color);
 }
 .slider-right {
+    --color: var(--inactive-color);
     right: 0;
     width: calc(100% - var(--value));
-    border-top-color: var(--inactive-color);
 }
 .slider-knob {
     position: relative;

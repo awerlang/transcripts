@@ -11,10 +11,9 @@
       :calls="calls"
       v-model="selected_call_id"
     />
-    <div class="flex-grow" />
     <div
       v-if="selected_call_id"
-      class="font-size-sm"
+      class="margin-left-auto font-size-sm"
     >
       <span class="text-upper">Matching Sensitivity</span>
       <Slider
@@ -184,6 +183,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .top-bar {
     display: flex;
+    flex-shrink: 0;
     height: 32px;
     padding: 12px;
     align-items: center;
@@ -193,6 +193,7 @@ export default defineComponent({
 }
 .filter-bar {
     display: flex;
+    flex-shrink: 0;
     height: 32px;
     padding: 4px;
     align-items: center;
@@ -204,16 +205,13 @@ export default defineComponent({
 }
 .content {
   flex-grow: 1;
-  padding: 12px;
+  overflow: auto;
+  padding: 24px 12px;
   background-color: hsl(183, 1%, 98%);
 }
 .container {
   height: 100%;
   background-color: hsl(183, 1%, 98%);
-
-  > * {
-    flex-grow: 1;
-  }
 
   > :not(:first-child) {
     margin-left: 12px;
