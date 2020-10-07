@@ -4,6 +4,30 @@ import { enableFetchMocks } from 'jest-fetch-mock'
 import { AgentData, CallData, TranscriptData } from '@/utils/types'
 import Cockpit from '@/components/Cockpit.vue'
 
+// FIXME: currently cannot import types from *.vue modules
+type ScriptLine = {
+  line: number;
+  time?: string;
+  speaker: string;
+  sentence: string;
+  matchingSentence: string;
+  similarity: number;
+}
+
+type Data = {
+  agents: AgentData[];
+  all_calls: CallData[];
+  selected_agent_id: string | null;
+  selected_call_id: string | null;
+  script: ScriptLine[] | null;
+  transcript: ScriptLine[] | null;
+  sensitivity: number;
+}
+
+type Computed = {
+  calls: CallData[];
+}
+
 describe('Cockpit.vue', () => {
   beforeAll(() => enableFetchMocks())
 
@@ -37,10 +61,10 @@ describe('Cockpit.vue', () => {
   it('fetches data', async () => {
     const wrapper = await getMountedComponent()
 
-    const vm: any = wrapper.vm.$data
+    const vm = wrapper.vm.$data as Data
     expect(vm.agents.map((it: AgentData) => it.id)).toStrictEqual(['123'])
     expect(vm.all_calls.map((it: CallData) => it.id)).toStrictEqual(['def', 'abc'])
-    expect((wrapper.vm as any).calls).toStrictEqual([])
+    expect((wrapper.vm as unknown as Computed).calls).toStrictEqual([])
   })
 
   it('shows informational message', async () => {
@@ -53,11 +77,11 @@ describe('Cockpit.vue', () => {
   it('when agent is selected the calls are filtered by agent', async () => {
     const wrapper = await getMountedComponent()
 
-    const vm: any = wrapper.vm.$data
+    const vm = wrapper.vm.$data as Data
     vm.selected_agent_id = '123'
     await wrapper.vm.$nextTick()
 
-    expect((wrapper.vm as any).calls.map((it: CallData) => it.id)).toStrictEqual(['abc', 'def'])
+    expect((wrapper.vm as unknown as Computed).calls.map((it: CallData) => it.id)).toStrictEqual(['abc', 'def'])
   })
 
   function mockTranscript(error = false) {
@@ -114,20 +138,20 @@ describe('Cockpit.vue', () => {
   it('when agent is selected then the current call is unset', async () => {
     mockTranscript()
     const wrapper = await getMountedComponent()
-    const vm: any = wrapper.vm.$data
+    const vm = wrapper.vm.$data as Data
     vm.selected_call_id = 'abc'
 
     vm.selected_agent_id = '123'
     await wrapper.vm.$nextTick()
 
-    expect((wrapper.vm as any).selected_call_id).toBeNull()
+    expect(vm.selected_call_id).toBeNull()
   })
 
   describe('when call is selected', () => {
     async function getComponent(transcriptFails = false) {
       const wrapper = await getMountedComponent()
 
-      const vm: any = wrapper.vm.$data
+      const vm = wrapper.vm.$data as Data
       vm.selected_agent_id = '123'
       await wrapper.vm.$nextTick()
 
@@ -152,7 +176,7 @@ describe('Cockpit.vue', () => {
       const wrapper = await getComponent()
 
       expect(fetchMock).toHaveBeenCalledTimes(1)
-      expect((wrapper.vm.$data as any).script).toStrictEqual([{
+      expect((wrapper.vm.$data as Data).script).toStrictEqual([{
         line: 1,
         speaker: 'Rep.',
         sentence: 'Hello',
@@ -165,7 +189,7 @@ describe('Cockpit.vue', () => {
       const wrapper = await getComponent()
 
       expect(fetchMock).toHaveBeenCalledTimes(1)
-      expect((wrapper.vm.$data as any).transcript).toStrictEqual([{
+      expect((wrapper.vm.$data as Data).transcript).toStrictEqual([{
         line: 1,
         time: '0:05',
         speaker: 'Inigo',
@@ -208,7 +232,7 @@ describe('Cockpit.vue', () => {
 
       const el = wrapper.find('slider-stub')
       expect(el.exists()).toBe(true)
-      expect((wrapper.vm as any).sensitivity).toBe(0.38)
+      expect((wrapper.vm.$data as Data).sensitivity).toBe(0.38)
     })
 
     it('handle api errors', async () => {
