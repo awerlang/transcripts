@@ -174,7 +174,7 @@ export default defineComponent({
           return response.json() as Promise<TranscriptData>
         })
         .then(data => {
-          if (data instanceof Error) {
+          if (data instanceof BusinessError) {
             // TODO: present a message
             return
           }
