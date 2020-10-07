@@ -60,7 +60,14 @@ describe('Cockpit.vue', () => {
     expect((wrapper.vm as any).calls.map((it: CallData) => it.id)).toStrictEqual(['abc', 'def'])
   })
 
-  function mockTranscript() {
+  function mockTranscript(error = false) {
+    if (error) {
+      return fetchMock.doMockOnceIf('/calls/abc/transcript')
+        .mockResponseOnce(JSON.stringify({}), {
+          status: 404,
+        })
+    }
+
     const transcript: TranscriptData = {
       "agent": [{ "agent_id": "123", "channel_no": 1 }],
       "customer": [{ "full_name": "Count Rugen", "channel_no": 2 }],
@@ -89,6 +96,14 @@ describe('Cockpit.vue', () => {
         sentence: 'Good morning',
         matching_sentence: '',
         similarity: 0.5,
+      }, {
+        order: 3,
+        timeFrom: 160,
+        timeTo: 160,
+        channel: 3,
+        sentence: 'Good night',
+        matching_sentence: '',
+        similarity: 0.5,
       }],
     }
 
@@ -109,7 +124,7 @@ describe('Cockpit.vue', () => {
   })
 
   describe('when call is selected', () => {
-    async function getComponent() {
+    async function getComponent(transcriptFails = false) {
       const wrapper = await getMountedComponent()
 
       const vm: any = wrapper.vm.$data
@@ -118,7 +133,7 @@ describe('Cockpit.vue', () => {
 
       vm.selected_call_id = 'abc'
       fetchMock.resetMocks()
-      mockTranscript()
+      mockTranscript(transcriptFails)
       await wrapper.vm.$nextTick()
 
       await flushPromises()
@@ -171,14 +186,21 @@ describe('Cockpit.vue', () => {
         sentence: 'Good morning',
         matchingSentence: '',
         similarity: 0.5,
+      }, {
+        line: 4,
+        time: '2:40',
+        speaker: '',
+        sentence: 'Good night',
+        matchingSentence: '',
+        similarity: 0.5,
       }])
     })
 
     it('then script table is shown', async () => {
       const wrapper = await getComponent()
 
-      const el = wrapper.find('table-stub')
-      expect(el.exists()).toBe(true)
+      const el = wrapper.findAll('table-stub')
+      expect(el.length).toBe(2)
     })
 
     it('then matching sensitivity slider is reset to default value', async () => {
@@ -187,6 +209,13 @@ describe('Cockpit.vue', () => {
       const el = wrapper.find('slider-stub')
       expect(el.exists()).toBe(true)
       expect((wrapper.vm as any).sensitivity).toBe(0.38)
+    })
+
+    it('handle api errors', async () => {
+      const wrapper = await getComponent(true)
+
+      const el = wrapper.findAll('table-stub')
+      expect(el.length).toBe(0)
     })
   })
 })

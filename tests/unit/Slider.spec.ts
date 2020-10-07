@@ -16,6 +16,12 @@ describe('Slider.vue', () => {
         expect(wrapper.emitted('update:modelValue')).toBeUndefined()
     })
 
+    it('hovering the slider does not update position', () => {
+        const wrapper = getMountedComponent()
+        wrapper.trigger('mousemove')
+        expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    })
+
     describe('given the minimum value', () => {
         it('emits on mouse down', async () => {
             const wrapper = getMountedComponent()
@@ -27,7 +33,7 @@ describe('Slider.vue', () => {
         it('sliding knob right updates position', () => {
             const wrapper = getMountedComponent()
             wrapper.get('.slider-knob').trigger('mousedown')
-            wrapper.get('.slider-knob').trigger('mousemove')
+            wrapper.trigger('mousemove')
             wrapper.get('.slider-knob').trigger('mouseup')
             // FIXME: result should be a number in the [0..1] interval
             expect(wrapper.emitted('update:modelValue')).toStrictEqual([[NaN]])
