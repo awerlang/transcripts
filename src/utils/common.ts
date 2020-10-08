@@ -3,5 +3,5 @@ export function clamp(min: number, max: number, value: number) {
 }
 
 export function compareFloat(a: number, b: number) {
-    return Math.abs(a - b) < Number.EPSILON
+    return Math.abs(a - b) <= Number.EPSILON
 }
