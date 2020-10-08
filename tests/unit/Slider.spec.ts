@@ -9,6 +9,11 @@ describe('Slider.vue', () => {
         })
     }
 
+    it('sets css variable "--value" according to value', () => {
+        const wrapper = getMountedComponent(0.75)
+        expect(wrapper.attributes('style')).toBe('--value: 75%;')
+    })
+
     it('tapping on the knob does not update position', () => {
         const wrapper = getMountedComponent()
         wrapper.get('.slider-knob').trigger('mousedown')
@@ -20,6 +25,18 @@ describe('Slider.vue', () => {
         const wrapper = getMountedComponent()
         wrapper.trigger('mousemove')
         expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    })
+
+    it('after mouse up the slider does not update position', () => {
+        const wrapper = getMountedComponent()
+        wrapper.get('.slider-knob').trigger('mousedown')
+        wrapper.trigger('mousemove')
+        wrapper.trigger('mousemove')
+        wrapper.trigger('mousemove')
+        wrapper.get('.slider-knob').trigger('mouseup')
+
+        wrapper.trigger('mousemove')
+        expect(wrapper.emitted('update:modelValue')).toStrictEqual([[NaN], [NaN], [NaN]])
     })
 
     describe('given the minimum value', () => {

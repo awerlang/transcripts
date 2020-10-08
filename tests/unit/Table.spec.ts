@@ -3,17 +3,33 @@ import { shallowMount } from '@vue/test-utils'
 import Table from '@/components/Table.vue'
 
 describe('Table.vue', () => {
+    it('requires a "type" prop', async () => {
+        const warnSpy = console.warn = jest.fn()
+        shallowMount(Table, {
+            props: {
+                title: 'Real',
+                type: '',
+                script: [],
+                similarity: 0.38,
+            },
+        })
+        expect(warnSpy).toBeCalledTimes(1)
+    })
+
     it('shows message when no data is available', () => {
         const wrapper = shallowMount(Table, {
             props: {
                 title: 'Real',
                 type: 'transcript',
                 script: [],
+                similarity: 0.38,
             },
         })
 
+        expect((wrapper.vm as { matching?: number }).matching).toBe(0)
         expect(wrapper.find('.header > div:nth-child(1)').text()).toStrictEqual('Real')
         expect(wrapper.find('.header > div:nth-child(2)').text()).toStrictEqual('-%')
+        expect(wrapper.find('.header > pie-chart-stub:nth-child(3)').exists()).toBe(true)
         expect(wrapper.findAll('.list-header > div').map(it => it.text())).toStrictEqual([
             'Time', 'Speaker', 'Sentence',
         ])
@@ -31,7 +47,7 @@ describe('Table.vue', () => {
                     speaker: 'Rep.',
                     sentence: 'Hello',
                     matchingSentence: 'Hi',
-                    similarity: 0.5,
+                    similarity: 0.38,
                 }, {
                     line: 2,
                     speaker: 'Rep.',
@@ -45,9 +61,11 @@ describe('Table.vue', () => {
                     matchingSentence: '',
                     similarity: 0.5,
                 }],
+                similarity: 0.38,
             },
         })
 
+        expect((wrapper.vm as { matching?: number }).matching).toBe(1/3)
         expect(wrapper.find('.header > div:nth-child(1)').text()).toStrictEqual('Expected')
         expect(wrapper.find('.header > div:nth-child(2)').text()).toStrictEqual('33%')
         expect(wrapper.findAll('.list-header > div').map(it => it.text())).toStrictEqual([
@@ -71,7 +89,7 @@ describe('Table.vue', () => {
                     speaker: 'Inigo',
                     sentence: 'Hello',
                     matchingSentence: 'Hi',
-                    similarity: 0.5,
+                    similarity: 0.38,
                 }, {
                     line: 2,
                     time: '0:15',
@@ -87,9 +105,11 @@ describe('Table.vue', () => {
                     matchingSentence: '',
                     similarity: 0.5,
                 }],
+                similarity: 0.38,
             },
         })
 
+        expect((wrapper.vm as { matching?: number }).matching).toBe(2/3)
         expect(wrapper.find('.header > div:nth-child(1)').text()).toStrictEqual('Real')
         expect(wrapper.find('.header > div:nth-child(2)').text()).toStrictEqual('67%')
         expect(wrapper.findAll('.list-header > div').map(it => it.text())).toStrictEqual([
@@ -129,6 +149,7 @@ describe('Table.vue', () => {
                     matchingSentence: '',
                     similarity: 0.5,
                 }],
+                similarity: 0.38,
             },
         })
     }

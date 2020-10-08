@@ -37,7 +37,7 @@ describe('Cockpit.vue', () => {
   }
 
   beforeEach(() => {
-    const agents = [{ id: '123', full_name: 'Inigo Montoya' }]
+    const agents = [{ id: '000' }, { id: '123', full_name: 'Inigo Montoya' }]
     const calls: CallData[] = [{
       "id": "def",
       "agent": [{ "agent_id": "123", "channel_no": 1 }],
@@ -62,7 +62,7 @@ describe('Cockpit.vue', () => {
     const wrapper = await getMountedComponent()
 
     const vm = wrapper.vm.$data as Data
-    expect(vm.agents.map((it: AgentData) => it.id)).toStrictEqual(['123'])
+    expect(vm.agents.map((it: AgentData) => it.id)).toStrictEqual(['000', '123'])
     expect(vm.all_calls.map((it: CallData) => it.id)).toStrictEqual(['def', 'abc'])
     expect((wrapper.vm as unknown as Computed).calls).toStrictEqual([])
   })
@@ -106,8 +106,8 @@ describe('Cockpit.vue', () => {
         similarity: 0.5,
       }, {
         order: 1,
-        timeFrom: 15,
-        timeTo: 15,
+        timeFrom: 10,
+        timeTo: 10,
         channel: 2,
         sentence: 'Good afternoon',
         matching_sentence: 'Good',
@@ -198,7 +198,7 @@ describe('Cockpit.vue', () => {
         similarity: 0.5,
       }, {
         line: 2,
-        time: '0:15',
+        time: '0:10',
         speaker: 'Count',
         sentence: 'Good afternoon',
         matchingSentence: 'Good',
@@ -233,6 +233,9 @@ describe('Cockpit.vue', () => {
       const el = wrapper.find('slider-stub')
       expect(el.exists()).toBe(true)
       expect((wrapper.vm.$data as Data).sensitivity).toBe(0.38)
+
+      const el2 = wrapper.find('.sensitivity-value')
+      expect(el2.text()).toBe('38%')
     })
 
     it('handle api errors', async () => {

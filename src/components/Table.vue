@@ -108,7 +108,7 @@ export default defineComponent({
     },
     similarity: {
       type: Number,
-      default: 0.38,
+      required: true,
     },
   },
   computed: {
