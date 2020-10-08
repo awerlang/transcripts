@@ -34,7 +34,7 @@
         <li
           class="item-container"
           v-for="item in script"
-          :key="item.order"
+          :key="item.line"
         >
           <div v-if="isScript">
             {{ item.line }}
