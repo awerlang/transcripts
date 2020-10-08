@@ -2,6 +2,10 @@ import { shallowMount } from '@vue/test-utils'
 
 import Table from '@/components/Table.vue'
 
+interface TableInterface {
+    scrollTo(line: number): void;
+}
+
 describe('Table.vue', () => {
     it('requires a "type" prop', async () => {
         const warnSpy = console.warn = jest.fn()
@@ -170,5 +174,33 @@ describe('Table.vue', () => {
             '50% matching with line "Good"',
             '',
         ])
+    })
+
+    it('emits when tapping a highlighted message', () => {
+        const wrapper = getMountedComponent()
+        const items = wrapper.findAll('.item-container:not(.list-header) > .sentence-column')
+        items[2].trigger('click')
+        items[1].trigger('click')
+        items[0].trigger('click')
+        expect(wrapper.emitted('select')).toStrictEqual([
+            [3],
+            [2],
+            [1],
+        ])
+    })
+
+    describe('public interface:', () => {
+        it('scrollTo()', () => {
+            const fn = HTMLElement.prototype.scrollIntoView = jest.fn()
+
+            const wrapper = getMountedComponent()
+            const table = wrapper.vm as unknown as TableInterface
+            const item = wrapper.find('.item-container:not(.list-header):nth-child(2)')
+            table.scrollTo(2)
+
+            expect(fn).toHaveBeenCalledTimes(1)
+            expect(fn).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' })
+            expect(fn.mock.instances[0]).toBe(item.element)
+        })
     })
 })

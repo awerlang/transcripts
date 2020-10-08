@@ -30,18 +30,22 @@
       class="container"
     >
       <Table
+        ref="transcript"
         v-if="transcript"
         title="Real"
         type="transcript"
         :script="transcript"
         :similarity="sensitivity"
+        @select="transcriptSelected"
       />
       <Table
+        ref="script"
         v-if="script"
         title="Expected"
         type="script"
         :script="script"
         :similarity="sensitivity"
+        @select="scriptSelected"
       />
     </div>
 
@@ -63,7 +67,7 @@ import { BusinessError } from '@/utils/errors'
 import Agent from './Agent.vue';
 import Call from './Call.vue';
 import BusinessPeopleLogo from './BusinessPeopleLogo.vue';
-import Table, { ScriptLine } from './Table.vue';
+import Table, { ScriptLine, TableInterface } from './Table.vue';
 import Slider from './Slider.vue';
 
 type Data = {
@@ -151,6 +155,19 @@ export default defineComponent({
           similarity: line.similarity,
         }
       })
+    },
+    scrollToMatchedSentence(line: number, source: ScriptLine[] | null, target: ScriptLine[] | null, table: TableInterface) {
+      const sourceLine = source?.find(it => it.line === line)
+      const targetLine = target?.find(it => it.matchingSentence === sourceLine?.sentence)
+      if (targetLine) {
+        table.scrollTo(targetLine.line)
+      }
+    },
+    scriptSelected(line: number) {
+      this.scrollToMatchedSentence(line, this.script, this.transcript, this.$refs.transcript as TableInterface)
+    },
+    transcriptSelected(line: number) {
+      this.scrollToMatchedSentence(line, this.transcript, this.script, this.$refs.script as TableInterface)
     },
   },
   watch: {

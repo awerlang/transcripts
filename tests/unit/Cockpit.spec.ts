@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import { shallowMount, flushPromises } from '@vue/test-utils'
 import { enableFetchMocks } from 'jest-fetch-mock'
 
@@ -28,11 +29,28 @@ type Computed = {
   calls: CallData[];
 }
 
+const scrollTo = jest.fn()
+
+const TableMock = defineComponent({
+  template: '<div table-stub />',
+  methods: {
+    scrollTo(...args: unknown[]) {
+      scrollTo.apply(this, args)
+    }
+  },
+})
+
 describe('Cockpit.vue', () => {
   beforeAll(() => enableFetchMocks())
 
   function getMountedComponent() {
-    const wrapper = shallowMount(Cockpit, {})
+    const wrapper = shallowMount(Cockpit, {
+      global: {
+        stubs: {
+          'Table': TableMock,
+        },
+      },
+    })
     return flushPromises().then(() => wrapper)
   }
 
@@ -101,8 +119,8 @@ describe('Cockpit.vue', () => {
         timeFrom: 5,
         timeTo: 5,
         channel: 1,
-        sentence: 'Hello',
-        matching_sentence: 'Hi',
+        sentence: 'Hi',
+        matching_sentence: 'Hello',
         similarity: 0.5,
       }, {
         order: 1,
@@ -193,8 +211,8 @@ describe('Cockpit.vue', () => {
         line: 1,
         time: '0:05',
         speaker: 'Inigo',
-        sentence: 'Hello',
-        matchingSentence: 'Hi',
+        sentence: 'Hi',
+        matchingSentence: 'Hello',
         similarity: 0.5,
       }, {
         line: 2,
@@ -223,7 +241,7 @@ describe('Cockpit.vue', () => {
     it('then script table is shown', async () => {
       const wrapper = await getComponent()
 
-      const el = wrapper.findAll('table-stub')
+      const el = wrapper.findAllComponents('[table-stub]')
       expect(el.length).toBe(2)
     })
 
@@ -238,11 +256,43 @@ describe('Cockpit.vue', () => {
       expect(el2.text()).toBe('38%')
     })
 
+    it('scrolls into transcript table', async () => {
+      const wrapper = await getComponent()
+      const [transcriptTable, scriptTable] = wrapper.findAllComponents('[table-stub]')
+      scriptTable.vm.$emit('select', 1)
+
+      expect(scrollTo).toHaveBeenCalledTimes(1)
+      expect(scrollTo).toHaveBeenCalledWith(1)
+      expect(scrollTo.mock.instances[0]).toBe(transcriptTable.vm)
+    })
+
+    it('scrolls into script table', async () => {
+      const wrapper = await getComponent()
+      const [transcriptTable, scriptTable] = wrapper.findAllComponents('[table-stub]')
+      transcriptTable.vm.$emit('select', 1)
+
+      expect(scrollTo).toHaveBeenCalledTimes(1)
+      expect(scrollTo).toHaveBeenCalledWith(1)
+      expect(scrollTo.mock.instances[0]).toBe(scriptTable.vm)
+    })
+
+    it('do not scroll if no match', async () => {
+      const wrapper = await getComponent()
+      const scriptTable = wrapper.getComponent('[table-stub]:last-child')
+      scriptTable.vm.$emit('select', 2)
+
+      expect(scrollTo).not.toHaveBeenCalled()
+    })
+
     it('handle api errors', async () => {
       const wrapper = await getComponent(true)
 
       const el = wrapper.findAll('table-stub')
       expect(el.length).toBe(0)
     })
+  })
+
+  afterEach(() => {
+    scrollTo.mockClear()
   })
 })

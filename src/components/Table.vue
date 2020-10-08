@@ -32,6 +32,7 @@
         </div>
 
         <li
+          :ref="'line-' + item.line"
           class="item-container"
           v-for="item in script"
           :key="item.line"
@@ -47,6 +48,7 @@
             class="sentence-column"
             :class="{ 'sentence-highlight': isSimilar(item) }"
             :title="getTooltip(item)"
+            @click="sentenceClicked(item)"
           >
             {{ item.sentence }}
           </div>
@@ -60,6 +62,10 @@
 import { defineComponent } from 'vue';
 
 import PieChart from './PieChart.vue';
+
+export interface TableInterface {
+  scrollTo(line: number): void;
+}
 
 export type ScriptLine = {
   line: number;
@@ -142,7 +148,14 @@ export default defineComponent({
       }
       return `${item.similarity * 100}% matching with line "${item.matchingSentence}"`
     },
-  }
+    sentenceClicked(item: ScriptLine) {
+      this.$emit('select', item.line)
+    },
+    scrollTo(line: number) {
+      const el = this.$refs['line-' + line] as HTMLElement
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  },
 });
 </script>
 
@@ -203,6 +216,9 @@ export default defineComponent({
     list-style: none;
     margin: 0;
     padding: 0;
+}
+.sentence-column {
+  cursor: pointer;
 }
 .sentence-highlight {
     background-color: var(--color);
