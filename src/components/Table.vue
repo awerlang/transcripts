@@ -46,7 +46,7 @@
           <div>{{ item.speaker }}</div>
           <div
             class="sentence-column"
-            :class="{ 'sentence-highlight': isSimilar(item) }"
+            :class="{ 'sentence-highlight': isSimilar(item), 'matched-line': isMatched(item) }"
             :title="getTooltip(item)"
             @click="sentenceClicked(item)"
           >
@@ -117,6 +117,11 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      matchedLine: null as number | null,
+    }
+  },
   computed: {
     matching(this: Data) {
       if (this.script.length === 0) {
@@ -139,6 +144,9 @@ export default defineComponent({
     },
   },
   methods: {
+    isMatched(item: ScriptLine): boolean {
+      return item.line === this.matchedLine
+    },
     isSimilar(item: ScriptLine): boolean {
       return isSimilar(item, this.similarity)
     },
@@ -149,11 +157,14 @@ export default defineComponent({
       return `${item.similarity * 100}% matching with line "${item.matchingSentence}"`
     },
     sentenceClicked(item: ScriptLine) {
+      this.matchedLine = null
       this.$emit('select', item.line)
     },
     scrollTo(line: number) {
       const el = this.$refs['line-' + line] as HTMLElement
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      el.scrollIntoView({ block: 'center' })
+
+      this.matchedLine = line
     }
   },
 });
@@ -219,8 +230,13 @@ export default defineComponent({
 }
 .sentence-column {
   cursor: pointer;
+
+  transition: background-color 800ms linear;
 }
 .sentence-highlight {
     background-color: var(--color);
+}
+.matched-line {
+    background-color: var(--active-hover-color);
 }
 </style>

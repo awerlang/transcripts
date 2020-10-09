@@ -1,3 +1,4 @@
+import { nextTick } from 'vue'
 import { shallowMount } from '@vue/test-utils'
 
 import Table from '@/components/Table.vue'
@@ -80,6 +81,7 @@ describe('Table.vue', () => {
             '2', 'Rep.', 'Good afternoon',
             '3', 'Rep.', 'Good morning',
         ])
+        expect(wrapper.find('.matched-line').exists()).toBe(false)
     })
 
     it('shows transcript', () => {
@@ -176,12 +178,14 @@ describe('Table.vue', () => {
         ])
     })
 
-    it('emits when tapping a highlighted message', () => {
+    it('emits when tapping a highlighted message', async () => {
         const wrapper = getMountedComponent()
         const items = wrapper.findAll('.item-container:not(.list-header) > .sentence-column')
-        items[2].trigger('click')
-        items[1].trigger('click')
-        items[0].trigger('click')
+        await items[2].trigger('click')
+        await items[1].trigger('click')
+        await items[0].trigger('click')
+
+        expect(wrapper.find('.matched-line').exists()).toBe(false)
         expect(wrapper.emitted('select')).toStrictEqual([
             [3],
             [2],
@@ -190,17 +194,20 @@ describe('Table.vue', () => {
     })
 
     describe('public interface:', () => {
-        it('scrollTo()', () => {
+        it('scrollTo()', async () => {
             const fn = HTMLElement.prototype.scrollIntoView = jest.fn()
 
             const wrapper = getMountedComponent()
             const table = wrapper.vm as unknown as TableInterface
             const item = wrapper.find('.item-container:not(.list-header):nth-child(2)')
+
             table.scrollTo(2)
+            await nextTick()
 
             expect(fn).toHaveBeenCalledTimes(1)
-            expect(fn).toHaveBeenCalledWith({ behavior: 'smooth', block: 'center' })
+            expect(fn).toHaveBeenCalledWith({ block: 'center' })
             expect(fn.mock.instances[0]).toBe(item.element)
+            expect(item.find('.sentence-column').classes('matched-line')).toBe(true)
         })
     })
 })
