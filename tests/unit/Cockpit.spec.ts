@@ -289,6 +289,8 @@ describe('Cockpit.vue', () => {
 
       const el = wrapper.findAll('table-stub')
       expect(el.length).toBe(0)
+      expect((wrapper.vm.$data as Data).script).toStrictEqual([])
+      expect((wrapper.vm.$data as Data).transcript).toStrictEqual([])
     })
   })
 

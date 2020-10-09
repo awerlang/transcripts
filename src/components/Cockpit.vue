@@ -175,9 +175,9 @@ export default defineComponent({
       this.selected_call_id = null
     },
     selected_call_id(value: string) {
-      this.script = null
-      this.transcript = null
       if (!value) {
+        this.script = null
+        this.transcript = null
         return
       }
 
@@ -193,6 +193,8 @@ export default defineComponent({
         .then(data => {
           if (data instanceof BusinessError) {
             // TODO: present a message
+            this.script = []
+            this.transcript = []
             return
           }
           this.parseTranscript(data)
