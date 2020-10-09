@@ -27,6 +27,7 @@ body,
   color: #2c3e50;
 
   --active-color: hsl(188, 77%, 18%);
+  --active-hover-color: hsl(188, 77%, 36%);
   --inactive-color: darkgray;
 }
 

@@ -124,5 +124,9 @@ export default defineComponent({
     height: 10px;
     border-radius: 5px;
     background: var(--active-color);
+
+    &:hover {
+      background: var(--active-hover-color);
+    }
 }
 </style>
