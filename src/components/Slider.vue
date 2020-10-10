@@ -99,7 +99,6 @@ export default defineComponent({
 
     display: inline-block;
     position: relative;
-    margin: 0 10px;
 }
 .slider-left, .slider-right {
     position: absolute;

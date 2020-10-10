@@ -69,6 +69,7 @@ body,
 
 .container {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .flex-grow {

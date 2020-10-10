@@ -173,6 +173,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .chrome {
     --color: hsl(183, 1%, 85%);
+    flex: 1;
     border: solid 2px var(--color);
     border-radius: 4px;
     box-shadow: 2px 2px 2px var(--color);

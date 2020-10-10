@@ -13,7 +13,7 @@
     />
     <div
       v-if="selected_call_id"
-      class="margin-left-auto font-size-sm"
+      class="matching-sensitivity font-size-sm"
     >
       <span class="text-upper">Matching Sensitivity</span>
       <Slider
@@ -225,41 +225,69 @@ export default defineComponent({
 }
 .filter-bar {
     display: flex;
+    flex-wrap: wrap;
     flex-shrink: 0;
-    height: 32px;
+    min-height: 32px;
     padding: 4px;
     align-items: center;
     background-color: hsl(183, 1%, 86%);
 
     > * {
-      margin-left: 8px;
+      margin: 6px 8px;
     }
 }
 .content {
   flex-grow: 1;
   overflow: auto;
-  padding: 24px 12px;
+  padding: 12px;
   background-color: hsl(183, 1%, 98%);
 }
 .container {
   height: 100%;
   background-color: hsl(183, 1%, 98%);
 
-  > :not(:first-child) {
-    margin-left: 12px;
+  @media (max-width: 768px - 1) {
+    > * {
+      margin: 8px 0;
+    }
   }
 
-  > :not(:last-child) {
-    margin-right: 12px;
+  @media (min-width: 768px) {
+    > * {
+      margin: 0 8px;
+    }
   }
 }
+.matching-sensitivity {
+  --text-width: 4em;
+}
 .sensitivity-slider {
-  width: 200px;
+  --text-width: 4em;
+  width: calc(100% - var(--text-width));
 }
 .sensitivity-value {
   display: inline-block;
-  width: 4em;
+  width: var(--text-width);
   font-weight: bold;
   text-align: right;
+}
+@media (max-width: 768px - 1) {
+  .matching-sensitivity {
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .matching-sensitivity {
+    margin-left: auto;
+  }
+  .sensitivity-slider {
+    width: 150px;
+    margin-left: 8px
+  }
+}
+@media (min-width: 1024px) {
+  .sensitivity-slider {
+    width: 250px;
+  }
 }
 </style>
