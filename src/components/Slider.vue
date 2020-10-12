@@ -41,6 +41,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       knobPressed: false,

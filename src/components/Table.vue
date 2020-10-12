@@ -117,6 +117,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['select'],
   data() {
     return {
       matchedLine: null as number | null,
